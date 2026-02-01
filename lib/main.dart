@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'components/tag_input.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,62 +57,76 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  List<String> _tags = [];
 
-  void _incrementCounter() {
+  void _onTagsChanged(List<String> tags) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _tags = tags;
     });
+    print('Tags changed: $tags');
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      appBar: AppBar(
+        title: const Text('标签输入框功能'),
+        backgroundColor: Colors.deepPurple,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // const Text(
-            //   'You have pushed the button this many times:',
-            // ),
-            // Text(
-            //   '$_counter',
-            //   style: Theme.of(context).textTheme.headlineMedium,
-            // ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              '标签输入示例',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple,
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            
+            // 基本标签输入
+            const Text('基本标签输入：'),
+            const SizedBox(height: 8.0),
+            TagInput(
+              initialTags: ['Flutter', 'OpenHarmony', '移动开发'],
+              hintText: '输入标签并按回车添加',
+              onTagsChanged: _onTagsChanged,
+            ),
+            const SizedBox(height: 24.0),
+            
+            // 带最大标签限制的标签输入
+            const Text('带最大标签限制的标签输入：'),
+            const SizedBox(height: 8.0),
+            TagInput(
+              maxTags: 5,
+              hintText: '最多添加5个标签',
+              onTagsChanged: (tags) {
+                print('Limited tags changed: $tags');
+              },
+            ),
+            const SizedBox(height: 24.0),
+            
+            // 显示当前标签
+            const Text('当前标签：'),
+            const SizedBox(height: 8.0),
+            Wrap(
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children: _tags.map((tag) {
+                return Chip(
+                  label: Text(tag),
+                  backgroundColor: Colors.deepPurple[100],
+                  labelStyle: TextStyle(color: Colors.deepPurple[800]),
+                );
+              }).toList(),
+            ),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
