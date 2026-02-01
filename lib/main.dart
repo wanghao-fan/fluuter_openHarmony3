@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'components/stack_layout.dart';
 
 void main() {
   runApp(const MyApp());
@@ -55,71 +56,339 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // const Text(
-            //   'You have pushed the button this many times:',
-            // ),
-            // Text(
-            //   '$_counter',
-            //   style: Theme.of(context).textTheme.headlineMedium,
-            // ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+            const Text(
+              '堆叠布局示例',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // 基础堆叠布局
+            const Text(
+              '1. 基础堆叠布局',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            BaseStackLayout(
+              children: [
+                Container(
+                  width: 300,
+                  height: 200,
+                  color: Colors.blue[100],
+                ),
+                Positioned(
+                  top: 20,
+                  left: 20,
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    color: Colors.red[200],
+                  ),
+                ),
+                Positioned(
+                  bottom: 20,
+                  right: 20,
+                  child: Container(
+                    width: 100,
+                    height: 60,
+                    color: Colors.green[200],
+                  ),
+                ),
+                Positioned(
+                  top: 80,
+                  left: 120,
+                  child: Container(
+                    width: 60,
+                    height: 100,
+                    color: Colors.yellow[200],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+
+            // 定位堆叠布局
+            const Text(
+              '2. 定位堆叠布局',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            PositionedStackLayout(
+              width: 300,
+              height: 200,
+              child: Container(
+                color: Colors.purple[100],
+                child: const Center(
+                  child: Text('背景内容'),
+                ),
+              ),
+              positionedChildren: [
+                Positioned(
+                  top: 10,
+                  left: 10,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Text(
+                      '顶部标签',
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 10,
+                  right: 10,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Text(
+                      '底部标签',
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 50,
+                  right: 20,
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    decoration: const BoxDecoration(
+                      color: Colors.green,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Center(
+                      child: Text(
+                        '5',
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+
+            // 渐变堆叠布局
+            const Text(
+              '3. 渐变堆叠布局',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            GradientStackLayout(
+              width: 300,
+              height: 200,
+              gradientColors: [
+                Colors.blue,
+                Colors.purple,
+                Colors.pink,
+              ],
+              child: const Center(
+                child: Text(
+                  '渐变背景内容',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+
+            // 卡片堆叠布局
+            const Text(
+              '4. 卡片堆叠布局',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            CardStackLayout(
+              width: 300,
+              height: 200,
+              child: const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '卡片标题',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    '这是一张带有徽章的卡片示例，展示了如何在卡片右上角添加徽章。',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                ],
+              ),
+              badge: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: const BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  'NEW',
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+
+            // 覆盖堆叠布局
+            const Text(
+              '5. 覆盖堆叠布局',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            OverlayStackLayout(
+              width: 300,
+              height: 200,
+              background: Container(
+                color: Colors.green[100],
+                child: const Center(
+                  child: Text('背景图片或内容'),
+                ),
+              ),
+              foreground: const Center(
+                child: Text(
+                  '叠加内容',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+
+            // 复杂堆叠布局
+            const Text(
+              '6. 复杂堆叠布局',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Container(
+              width: 300,
+              height: 250,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey[300]!, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Stack(
+                children: [
+                  // 背景
+                  Container(
+                    width: double.infinity,
+                    height: 120,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.blue, Colors.purple],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(8),
+                      ),
+                    ),
+                  ),
+                  // 头像
+                  Positioned(
+                    top: 80,
+                    left: 20,
+                    child: Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(40),
+                        border: Border.all(color: Colors.white, width: 3),
+                      ),
+                      child: const Center(
+                        child: Icon(Icons.person, size: 40, color: Colors.grey),
+                      ),
+                    ),
+                  ),
+                  // 标题
+                  const Positioned(
+                    top: 180,
+                    left: 20,
+                    right: 20,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '用户信息卡片',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text('这是一个复杂的堆叠布局示例，展示了如何创建用户信息卡片。'),
+                      ],
+                    ),
+                  ),
+                  // 操作按钮
+                  Positioned(
+                    bottom: 20,
+                    right: 20,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('关注'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 40),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
+
