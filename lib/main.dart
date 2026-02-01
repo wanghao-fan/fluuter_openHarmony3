@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'components/toolbar.dart';
+import 'components/action_button.dart';
 
 void main() {
   runApp(const MyApp());
@@ -55,71 +57,261 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  bool _isLoading = false;
 
-  void _incrementCounter() {
+  void _handleButtonPress(String buttonName) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _isLoading = true;
+    });
+
+    // 模拟网络请求
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        _isLoading = false;
+      });
+      print('$buttonName 被点击了！');
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+      body: Column(
+        children: [
+          // 自定义工具栏
+          Toolbar(
+            title: '工具栏示例',
+            actions: [
+              ToolbarAction(
+                icon: Icons.search,
+                tooltip: '搜索',
+                onPressed: () => print('搜索按钮被点击'),
+              ),
+              ToolbarAction(
+                icon: Icons.notifications,
+                tooltip: '通知',
+                onPressed: () => print('通知按钮被点击'),
+              ),
+              ToolbarAction(
+                icon: Icons.settings,
+                tooltip: '设置',
+                onPressed: () => print('设置按钮被点击'),
+              ),
+              ToolbarAction(
+                icon: Icons.more_vert,
+                tooltip: '更多',
+                onPressed: () => print('更多按钮被点击'),
+              ),
+            ],
+          ),
+
+          // 工具栏变体
+          Toolbar(
+            title: '彩色工具栏',
+            actions: [
+              ToolbarAction(
+                icon: Icons.favorite,
+                tooltip: '收藏',
+                onPressed: () => print('收藏按钮被点击'),
+                iconColor: Colors.red,
+                backgroundColor: Colors.white.withOpacity(0.2),
+              ),
+              ToolbarAction(
+                icon: Icons.share,
+                tooltip: '分享',
+                onPressed: () => print('分享按钮被点击'),
+                iconColor: Colors.yellow,
+                backgroundColor: Colors.white.withOpacity(0.2),
+              ),
+            ],
+            backgroundColor: Colors.teal,
+            titleColor: Colors.white,
+          ),
+
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  const Text(
+                    '动作按钮示例',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // 标准按钮
+                  const Text('标准按钮:', style: TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
+                  ActionButton(
+                    text: '主要按钮',
+                    onPressed: () => _handleButtonPress('主要按钮'),
+                  ),
+                  const SizedBox(height: 12),
+
+                  // 带图标按钮
+                  const Text('带图标按钮:', style: TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
+                  ActionButton(
+                    text: '保存',
+                    icon: Icons.save,
+                    onPressed: () => _handleButtonPress('保存按钮'),
+                  ),
+                  const SizedBox(height: 12),
+
+                  // 轮廓按钮
+                  const Text('轮廓按钮:', style: TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
+                  ActionButton(
+                    text: '取消',
+                    icon: Icons.cancel,
+                    onPressed: () => _handleButtonPress('取消按钮'),
+                    isOutlined: true,
+                  ),
+                  const SizedBox(height: 12),
+
+                  // 加载状态按钮
+                  const Text('加载状态按钮:', style: TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
+                  ActionButton(
+                    text: '提交中...',
+                    icon: Icons.send,
+                    onPressed: () => _handleButtonPress('提交按钮'),
+                    isLoading: _isLoading,
+                  ),
+                  const SizedBox(height: 12),
+
+                  // 彩色按钮
+                  const Text('彩色按钮:', style: TextStyle(fontSize: 16)),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ActionButton(
+                          text: '成功',
+                          icon: Icons.check_circle,
+                          onPressed: () => _handleButtonPress('成功按钮'),
+                          buttonColor: Colors.green,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ActionButton(
+                          text: '警告',
+                          icon: Icons.warning,
+                          onPressed: () => _handleButtonPress('警告按钮'),
+                          buttonColor: Colors.orange,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ActionButton(
+                          text: '错误',
+                          icon: Icons.error,
+                          onPressed: () => _handleButtonPress('错误按钮'),
+                          buttonColor: Colors.red,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ActionButton(
+                          text: '信息',
+                          icon: Icons.info,
+                          onPressed: () => _handleButtonPress('信息按钮'),
+                          buttonColor: Colors.blue,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+
+                  const Text(
+                    '悬浮动作按钮',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    height: 200,
+                    color: Colors.grey[100],
+                    child: Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        const Center(
+                          child: Text('内容区域'),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: CustomFloatingActionButton(
+                            icon: Icons.add,
+                            tooltip: '添加',
+                            onPressed: () => print('悬浮添加按钮被点击'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  const Text(
+                    '不同尺寸的悬浮按钮',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      CustomFloatingActionButton(
+                        icon: Icons.star,
+                        tooltip: '小尺寸',
+                        onPressed: () => print('小尺寸按钮被点击'),
+                        size: 40,
+                        backgroundColor: Colors.purple,
+                      ),
+                      CustomFloatingActionButton(
+                        icon: Icons.star,
+                        tooltip: '标准尺寸',
+                        onPressed: () => print('标准尺寸按钮被点击'),
+                        backgroundColor: Colors.indigo,
+                      ),
+                      CustomFloatingActionButton(
+                        icon: Icons.star,
+                        tooltip: '大尺寸',
+                        onPressed: () => print('大尺寸按钮被点击'),
+                        size: 64,
+                        backgroundColor: Colors.blue,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 40),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // const Text(
-            //   'You have pushed the button this many times:',
-            // ),
-            // Text(
-            //   '$_counter',
-            //   style: Theme.of(context).textTheme.headlineMedium,
-            // ),
-          ],
-        ),
+
+      // 右下角悬浮按钮
+      floatingActionButton: CustomFloatingActionButton(
+        icon: Icons.add,
+        tooltip: '添加新项目',
+        onPressed: () => print('主悬浮按钮被点击'),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
+
