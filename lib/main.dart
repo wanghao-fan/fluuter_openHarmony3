@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'components/bottom_sheet.dart';
 
 void main() {
   runApp(const MyApp());
@@ -55,71 +56,151 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  String _bottomSheetResult = '';
 
-  void _incrementCounter() {
+  Future<void> _showBasicBottomSheet() async {
+    final result = await BottomSheetManager.showBottomSheet(
+      context,
+      title: '提示',
+      content: const Text('这是一个基本的底部弹窗，用于显示简单信息。'),
+    );
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _bottomSheetResult = '基本底部弹窗结果: ${result ? '确定' : '取消'}';
+    });
+  }
+
+  Future<void> _showCustomBottomSheet() async {
+    final result = await BottomSheetManager.showBottomSheet(
+      context,
+      title: '自定义内容',
+      height: 400,
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('请选择您的兴趣爱好：'),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: CheckboxListTile(
+                  title: const Text('阅读'),
+                  value: false,
+                  onChanged: (value) {},
+                ),
+              ),
+              Expanded(
+                child: CheckboxListTile(
+                  title: const Text('运动'),
+                  value: false,
+                  onChanged: (value) {},
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: CheckboxListTile(
+                  title: const Text('音乐'),
+                  value: false,
+                  onChanged: (value) {},
+                ),
+              ),
+              Expanded(
+                child: CheckboxListTile(
+                  title: const Text('旅游'),
+                  value: false,
+                  onChanged: (value) {},
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      confirmText: '保存',
+      cancelText: '取消',
+    );
+    setState(() {
+      _bottomSheetResult = '自定义底部弹窗结果: ${result ? '保存' : '取消'}';
+    });
+  }
+
+  Future<void> _showSelectionBottomSheet() async {
+    final result = await BottomSheetManager.showSelectionBottomSheet(
+      context,
+      title: '选择城市',
+      options: ['北京', '上海', '广州', '深圳', '杭州', '成都', '武汉', '西安'],
+    );
+    setState(() {
+      _bottomSheetResult = '选择底部弹窗结果: ${result ?? '未选择'}';
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text('底部弹窗示例'),
+        backgroundColor: Colors.deepPurple,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // const Text(
-            //   'You have pushed the button this many times:',
-            // ),
-            // Text(
-            //   '$_counter',
-            //   style: Theme.of(context).textTheme.headlineMedium,
-            // ),
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 20),
+            const Text(
+              '底部弹窗示例',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 30),
+            
+            ElevatedButton(
+              onPressed: _showBasicBottomSheet,
+              child: const Text('显示基本底部弹窗'),
+            ),
+            const SizedBox(height: 16),
+            
+            ElevatedButton(
+              onPressed: _showCustomBottomSheet,
+              child: const Text('显示自定义内容底部弹窗'),
+            ),
+            const SizedBox(height: 16),
+            
+            ElevatedButton(
+              onPressed: _showSelectionBottomSheet,
+              child: const Text('显示选项选择底部弹窗'),
+            ),
+            const SizedBox(height: 40),
+            
+            const Text(
+              '底部弹窗结果:',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                _bottomSheetResult,
+                style: const TextStyle(fontSize: 14),
+              ),
+            ),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
