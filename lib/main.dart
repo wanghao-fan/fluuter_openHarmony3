@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'widgets/notification_bar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,62 +57,105 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
+      ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // const Text(
-            //   'You have pushed the button this many times:',
-            // ),
-            // Text(
-            //   '$_counter',
-            //   style: Theme.of(context).textTheme.headlineMedium,
-            // ),
+            const Text(
+              '通知栏效果展示',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              '以下是不同类型的通知栏：',
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 40),
+            
+            // 信息通知
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: NotificationBar(
+                message: '这是一条信息通知，用于显示一般信息',
+                type: NotificationType.info,
+                autoDismiss: false,
+              ),
+            ),
+            const SizedBox(height: 20),
+            
+            // 成功通知
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: NotificationBar(
+                message: '操作成功！数据已保存',
+                type: NotificationType.success,
+                autoDismiss: false,
+              ),
+            ),
+            const SizedBox(height: 20),
+            
+            // 警告通知
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: NotificationBar(
+                message: '警告：请检查您的输入信息',
+                type: NotificationType.warning,
+                autoDismiss: false,
+              ),
+            ),
+            const SizedBox(height: 20),
+            
+            // 错误通知
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: NotificationBar(
+                message: '错误：操作失败，请重试',
+                type: NotificationType.error,
+                autoDismiss: false,
+              ),
+            ),
+            const SizedBox(height: 40),
+            
+            ElevatedButton(
+              onPressed: () {
+                NotificationManager.info(context, '这是一条信息通知');
+              },
+              child: const Text('显示信息通知'),
+            ),
+            const SizedBox(height: 10),
+            
+            ElevatedButton(
+              onPressed: () {
+                NotificationManager.success(context, '操作成功！');
+              },
+              child: const Text('显示成功通知'),
+            ),
+            const SizedBox(height: 10),
+            
+            ElevatedButton(
+              onPressed: () {
+                NotificationManager.warning(context, '警告信息');
+              },
+              child: const Text('显示警告通知'),
+            ),
+            const SizedBox(height: 10),
+            
+            ElevatedButton(
+              onPressed: () {
+                NotificationManager.error(context, '操作失败！');
+              },
+              child: const Text('显示错误通知'),
+            ),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
