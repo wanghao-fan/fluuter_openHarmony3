@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'widgets/permission_dialog.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,62 +57,61 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      appBar: AppBar(
+        title: const Text('Flutter for OpenHarmony'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // const Text(
-            //   'You have pushed the button this many times:',
-            // ),
-            // Text(
-            //   '$_counter',
-            //   style: Theme.of(context).textTheme.headlineMedium,
-            // ),
+            // 权限申请弹窗效果展示
+            const Text(
+              '权限申请弹窗效果展示',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 30),
+
+            // 相机权限申请
+            const PermissionRequestDisplay(
+              permissionType: PermissionType.camera,
+              title: '相机权限申请',
+              description: '点击按钮申请相机权限，体验权限申请流程',
+            ),
+            const SizedBox(height: 20),
+
+            // 麦克风权限申请
+            const PermissionRequestDisplay(
+              permissionType: PermissionType.microphone,
+              title: '麦克风权限申请',
+              description: '点击按钮申请麦克风权限，体验权限申请流程',
+            ),
+            const SizedBox(height: 20),
+
+            // 位置权限申请
+            const PermissionRequestDisplay(
+              permissionType: PermissionType.location,
+              title: '位置权限申请',
+              description: '点击按钮申请位置权限，体验权限申请流程',
+            ),
+            const SizedBox(height: 20),
+
+            // 存储权限申请
+            const PermissionRequestDisplay(
+              permissionType: PermissionType.storage,
+              title: '存储权限申请',
+              description: '点击按钮申请存储权限，体验权限申请流程',
+            ),
+            const SizedBox(height: 30),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
