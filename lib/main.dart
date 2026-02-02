@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'widgets/context_menu.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,62 +57,129 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String _selectedAction = '未选择任何操作';
   int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    // 上下文菜单项
+    final contextMenuItems = [
+      ContextMenuItem(
+        title: '复制',
+        icon: Icons.copy,
+        onTap: () {
+          setState(() {
+            _selectedAction = '复制';
+          });
+          _showSnackBar('已复制内容');
+        },
+      ),
+      ContextMenuItem(
+        title: '粘贴',
+        icon: Icons.paste,
+        onTap: () {
+          setState(() {
+            _selectedAction = '粘贴';
+          });
+          _showSnackBar('已粘贴内容');
+        },
+      ),
+      ContextMenuItem(
+        title: '剪切',
+        icon: Icons.cut,
+        onTap: () {
+          setState(() {
+            _selectedAction = '剪切';
+          });
+          _showSnackBar('已剪切内容');
+        },
+      ),
+      ContextMenuItem(
+        title: '删除',
+        icon: Icons.delete,
+        textColor: Colors.red,
+        onTap: () {
+          setState(() {
+            _selectedAction = '删除';
+          });
+          _showSnackBar('已删除内容');
+        },
+      ),
+    ];
+
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
+      ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // const Text(
-            //   'You have pushed the button this many times:',
-            // ),
-            // Text(
-            //   '$_counter',
-            //   style: Theme.of(context).textTheme.headlineMedium,
-            // ),
+            const Text(
+              '长按或右键点击下方元素显示上下文菜单',
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 20),
+            // 使用上下文菜单组件
+            ContextMenu(
+              items: contextMenuItems,
+              child: Container(
+                width: 200,
+                height: 100,
+                decoration: BoxDecoration(
+                  color: Colors.blue[100],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue, width: 2),
+                ),
+                child: Center(
+                  child: Text(
+                    '右键/长按我',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.blue[800],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            Text(
+              '最近操作: $_selectedAction',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              '提示:',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40),
+              child: Text(
+                '- 在桌面端：右键点击元素显示上下文菜单\n' 
+                '- 在移动端：长按元素显示上下文菜单',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14),
+              ),
+            ),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
