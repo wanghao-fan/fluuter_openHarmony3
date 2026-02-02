@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'widgets/deep_link_handler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,7 +38,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: 'Flutter for openHarmony'),
+      home: DeepLinkHandler(),
     );
   }
 }
