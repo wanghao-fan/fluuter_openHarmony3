@@ -4,22 +4,22 @@ import 'package:flutter/material.dart';
 class DrawerNavigation extends StatelessWidget {
   /// 抽屉标题
   final String title;
-  
+
   /// 用户头像
   final String avatarPath;
-  
+
   /// 用户名
   final String userName;
-  
+
   /// 用户邮箱
   final String userEmail;
-  
+
   /// 菜单项列表
   final List<DrawerMenuItem> menuItems;
-  
+
   /// 底部菜单项列表
   final List<DrawerMenuItem>? bottomMenuItems;
-  
+
   /// 抽屉宽度占屏幕宽度的比例
   final double drawerWidthRatio;
 
@@ -46,7 +46,7 @@ class DrawerNavigation extends StatelessWidget {
         children: [
           // 抽屉头部
           _buildDrawerHeader(),
-          
+
           // 菜单项
           Expanded(
             child: ListView.builder(
@@ -58,7 +58,7 @@ class DrawerNavigation extends StatelessWidget {
               },
             ),
           ),
-          
+
           // 底部菜单项
           if (bottomMenuItems != null && bottomMenuItems!.isNotEmpty)
             Container(
@@ -69,7 +69,9 @@ class DrawerNavigation extends StatelessWidget {
                 ),
               ),
               child: Column(
-                children: bottomMenuItems!.map((item) => _buildMenuItem(item)).toList(),
+                children: bottomMenuItems!
+                    .map((item) => _buildMenuItem(item))
+                    .toList(),
               ),
             ),
         ],
@@ -101,7 +103,7 @@ class DrawerNavigation extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          
+
           // 用户信息
           Row(
             children: [
@@ -112,28 +114,32 @@ class DrawerNavigation extends StatelessWidget {
                 backgroundColor: Colors.white,
               ),
               const SizedBox(width: 16),
-              
+
               // 用户名和邮箱
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    userName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      userName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    userEmail,
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14,
+                    const SizedBox(height: 4),
+                    Text(
+                      userEmail,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
@@ -166,25 +172,25 @@ class DrawerNavigation extends StatelessWidget {
 class DrawerMenuItem {
   /// 菜单项标题
   final String title;
-  
+
   /// 菜单项图标
   final IconData icon;
-  
+
   /// 图标颜色
   final Color iconColor;
-  
+
   /// 文本颜色
   final Color textColor;
-  
+
   /// 点击回调
   final VoidCallback? onTap;
-  
+
   /// 尾部组件
   final Widget? trailing;
-  
+
   /// 是否选中
   final bool isSelected;
-  
+
   /// 选中时的背景颜色
   final Color selectedTileColor;
 
@@ -196,7 +202,8 @@ class DrawerMenuItem {
     this.onTap,
     this.trailing,
     this.isSelected = false,
-    this.selectedTileColor = const Color(0x1A2196F3), // Colors.blue.withOpacity(0.1) 的十六进制表示
+    this.selectedTileColor =
+        const Color(0x1A2196F3), // Colors.blue.withOpacity(0.1) 的十六进制表示
   });
 }
 
@@ -205,7 +212,8 @@ class DrawerNavigationDisplay extends StatefulWidget {
   const DrawerNavigationDisplay({Key? key}) : super(key: key);
 
   @override
-  State<DrawerNavigationDisplay> createState() => _DrawerNavigationDisplayState();
+  State<DrawerNavigationDisplay> createState() =>
+      _DrawerNavigationDisplayState();
 }
 
 class _DrawerNavigationDisplayState extends State<DrawerNavigationDisplay> {
