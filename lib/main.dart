@@ -70,7 +70,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  final PageStackManagerController _stackController = PageStackManagerController();
+  final PageStackManagerController _stackController =
+      PageStackManagerController();
 
   @override
   Widget build(BuildContext context) {
@@ -96,15 +97,18 @@ class _MyHomePageState extends State<MyHomePage> {
           Container(
             padding: const EdgeInsets.all(16),
             color: Colors.grey[200],
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            child: Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              alignment: WrapAlignment.center,
               children: [
                 ElevatedButton(
                   onPressed: () {
                     _stackController.pushPage(
                       PageStackItem(
                         title: '页面 ${_stackController.stackLength + 1}',
-                        color: Colors.primaries[_stackController.stackLength % Colors.primaries.length],
+                        color: Colors.primaries[_stackController.stackLength %
+                            Colors.primaries.length],
                       ),
                     );
                   },
