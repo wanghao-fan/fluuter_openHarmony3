@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'components/pagination.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,62 +57,105 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int _currentPage = 1;
+  int _totalPages = 20;
+  int _pageSize = 10;
+  int _totalItems = 200;
+  List<String> _dataList = [];
 
-  void _incrementCounter() {
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  void _loadData() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _dataList = List.generate(
+        _pageSize,
+        (index) => '第 $_currentPage 页 - 第 ${(index + 1)} 条数据',
+      );
+    });
+  }
+
+  void _handlePageChanged(int page) {
+    setState(() {
+      _currentPage = page;
+      _loadData();
+    });
+  }
+
+  void _handleSizeChanged(int size) {
+    setState(() {
+      _pageSize = size;
+      _currentPage = 1;
+      _totalPages = (_totalItems / size).ceil();
+      _loadData();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      appBar: AppBar(
+        title: const Text('Pagination 分页示例'),
+        backgroundColor: Colors.deepPurple,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            // const Text(
-            //   'You have pushed the button this many times:',
-            // ),
-            // Text(
-            //   '$_counter',
-            //   style: Theme.of(context).textTheme.headlineMedium,
-            // ),
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 20),
+            const Text(
+              'Pagination 分页示例',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 30),
+            
+            // 数据列表
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey[200]!),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: ListView.builder(
+                  itemCount: _dataList.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(_dataList[index]),
+                      tileColor: index % 2 == 0 ? Colors.grey[50] : Colors.white,
+                    );
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            
+            // 分页组件
+            Pagination(
+              currentPage: _currentPage,
+              totalPages: _totalPages,
+              pageSize: _pageSize,
+              totalItems: _totalItems,
+              onPageChanged: _handlePageChanged,
+              showTotal: true,
+              showSizeChanger: true,
+              onSizeChanged: _handleSizeChanged,
+              showQuickJumper: true,
+              activeColor: Colors.deepPurple,
+              inactiveColor: Colors.grey,
+              disabledColor: Colors.grey[300]!,
+            ),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
