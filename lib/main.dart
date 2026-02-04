@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:aa/utils/dice_roller.dart';
 
 void main() {
   runApp(const MyApp());
@@ -71,47 +72,74 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      appBar: AppBar(
+        title: Text(widget.title),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // const Text(
-            //   'You have pushed the button this many times:',
-            // ),
-            // Text(
-            //   '$_counter',
-            //   style: Theme.of(context).textTheme.headlineMedium,
-            // ),
+            // 页面标题
+            Text(
+              '掷骰子模拟器',
+              style: Theme.of(context).textTheme.headlineLarge,
+            ),
+            const SizedBox(height: 30),
+            
+            // 标准6面骰子
+            DiceRoller(
+              sides: 6,
+              size: 150,
+              diceColor: Colors.white,
+              dotColor: Colors.black,
+            ),
+            const SizedBox(height: 40),
+            
+            // 4面骰子
+            DiceRoller(
+              sides: 4,
+              size: 120,
+              diceColor: Colors.red,
+              dotColor: Colors.white,
+              textColor: Colors.white,
+            ),
+            const SizedBox(height: 40),
+            
+            // 8面骰子
+            DiceRoller(
+              sides: 8,
+              size: 130,
+              diceColor: Colors.blue,
+              dotColor: Colors.white,
+              textColor: Colors.white,
+            ),
+            const SizedBox(height: 40),
+            
+            // 12面骰子
+            DiceRoller(
+              sides: 12,
+              size: 140,
+              diceColor: Colors.green,
+              dotColor: Colors.white,
+              textColor: Colors.white,
+            ),
+            const SizedBox(height: 40),
+            
+            // 20面骰子
+            DiceRoller(
+              sides: 20,
+              size: 160,
+              diceColor: Colors.purple,
+              dotColor: Colors.white,
+              textColor: Colors.white,
+            ),
+            const SizedBox(height: 40),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _incrementCounter,
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
