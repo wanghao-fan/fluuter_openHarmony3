@@ -32,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // 横向柱状图数据
+  // 柱状图数据
   final List<Map<String, dynamic>> barData1 = [
     {'value': 335, 'name': '直接访问'},
     {'value': 310, 'name': '邮件营销'},
@@ -61,13 +61,13 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             const SizedBox(height: 20),
-            // 第一个横向柱状图
+            // 第一个柱状图
             FlHorizontalBarChart(
               title: '访问来源分析',
               data: barData1,
             ),
             const SizedBox(height: 40),
-            // 第二个横向柱状图
+            // 第二个柱状图
             FlHorizontalBarChart(
               title: '产品销售分布',
               data: barData2,
