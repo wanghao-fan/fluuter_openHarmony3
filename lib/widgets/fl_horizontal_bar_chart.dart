@@ -45,7 +45,8 @@ class _FlHorizontalBarChartState extends State<FlHorizontalBarChart> {
       // 显示点击信息提示
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${widget.data[_touchedIndex!]['name']}: ${widget.data[_touchedIndex!]['value']}'),
+          content: Text(
+              '${widget.data[_touchedIndex!]['name']}: ${widget.data[_touchedIndex!]['value']}'),
           duration: const Duration(seconds: 1),
         ),
       );
@@ -57,7 +58,9 @@ class _FlHorizontalBarChartState extends State<FlHorizontalBarChart> {
     // 计算最大值用于Y轴缩放
     double maxValue = 0;
     for (var item in widget.data) {
-      final value = item['value'] as double? ?? (item['value'] as int).toDouble();
+      final value = item['value'] is double
+          ? item['value'] as double
+          : (item['value'] is int ? (item['value'] as int).toDouble() : 0.0);
       if (value > maxValue) {
         maxValue = value;
       }
@@ -117,9 +120,10 @@ class _FlHorizontalBarChartState extends State<FlHorizontalBarChart> {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        if (value.toInt() >= 0 && value.toInt() < widget.data.length) {
+                        final index = value.toInt();
+                        if (index >= 0 && index < widget.data.length) {
                           return Text(
-                            widget.data[value.toInt()]['name'],
+                            widget.data[index]['name'],
                             style: const TextStyle(fontSize: 12),
                           );
                         }
@@ -134,15 +138,17 @@ class _FlHorizontalBarChartState extends State<FlHorizontalBarChart> {
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
                         return Text(
-                          '\$value',
+                          '${value.toInt()}',
                           style: const TextStyle(fontSize: 12),
                         );
                       },
                       interval: maxValue / 5,
                     ),
                   ),
-                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
                 ),
                 gridData: FlGridData(
                   show: true,
@@ -161,10 +167,14 @@ class _FlHorizontalBarChartState extends State<FlHorizontalBarChart> {
                 barGroups: widget.data.asMap().entries.map((entry) {
                   final index = entry.key;
                   final data = entry.value;
-                  final value = data['value'] as double? ?? (data['value'] as int).toDouble();
+                  final value = data['value'] is double
+                      ? data['value'] as double
+                      : (data['value'] is int
+                          ? (data['value'] as int).toDouble()
+                          : 0.0);
                   final isTouched = index == _touchedIndex;
                   final barWidth = isTouched ? 25.0 : 20.0;
-                  
+
                   return BarChartGroupData(
                     x: index,
                     barRods: [
