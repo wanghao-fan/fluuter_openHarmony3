@@ -15,7 +15,8 @@ class AssetCardWidget extends StatefulWidget {
   _AssetCardWidgetState createState() => _AssetCardWidgetState();
 }
 
-class _AssetCardWidgetState extends State<AssetCardWidget> with SingleTickerProviderStateMixin {
+class _AssetCardWidgetState extends State<AssetCardWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -110,49 +111,65 @@ class _AssetCardWidgetState extends State<AssetCardWidget> with SingleTickerProv
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header with icon and platform
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 40,
-                          height: 40,
+                ClipRect(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: widget.asset.color.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Icon(
+                                _getIcon(widget.asset.icon),
+                                color: widget.asset.color,
+                                size: 20,
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                widget.asset.platform,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[600],
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: widget.asset.color.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Icon(
-                            _getIcon(widget.asset.icon),
-                            color: widget.asset.color,
-                            size: 20,
+                          child: Text(
+                            widget.asset.unit,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: widget.asset.color,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
-                        SizedBox(width: 12),
-                        Text(
-                          widget.asset.platform,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: widget.asset.color.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Text(
-                        widget.asset.unit,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: widget.asset.color,
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 SizedBox(height: 16),
 
@@ -178,14 +195,16 @@ class _AssetCardWidgetState extends State<AssetCardWidget> with SingleTickerProv
                 SizedBox(height: 12),
 
                 // Description
-                Text(
-                  widget.asset.description,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
+                Expanded(
+                  child: Text(
+                    widget.asset.description,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
