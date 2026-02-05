@@ -101,9 +101,11 @@ class _MortgageCalculatorState extends State<MortgageCalculator> {
         border: Border.all(color: widget.borderColor),
         borderRadius: BorderRadius.circular(widget.borderRadius),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
           // 贷款金额
           _buildInputSection(
             label: '贷款金额',
@@ -154,6 +156,7 @@ class _MortgageCalculatorState extends State<MortgageCalculator> {
             _buildResultSection(),
         ],
       ),
+    ),
     );
   }
 
