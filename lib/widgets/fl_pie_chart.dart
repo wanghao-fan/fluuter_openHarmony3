@@ -105,7 +105,7 @@ class _FlPieChartState extends State<FlPieChart> {
                         final radius = isTouched ? 100.0 : 80.0;
                         
                         return PieChartSectionData(
-                          value: data['value'] as double? ?? (data['value'] as int).toDouble(),
+                          value: data['value'] is double ? data['value'] as double : (data['value'] is int ? (data['value'] as int).toDouble() : 0.0),
                           title: data['name'] as String,
                           color: colors[index % colors.length],
                           radius: radius,
