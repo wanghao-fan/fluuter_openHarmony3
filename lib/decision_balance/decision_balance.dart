@@ -80,45 +80,46 @@ class _DecisionBalanceState extends State<DecisionBalance> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Decision result
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 16),
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.green[100],
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              _decisionResult,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.green[800],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Decision result
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 16),
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              decoration: BoxDecoration(
+                color: Colors.green[100],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                _decisionResult,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green[800],
+                ),
               ),
             ),
-          ),
 
-          // Balance scale
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.symmetric(vertical: 24),
-            child: BalanceScale(
-              leftOption: _leftOption,
-              rightOption: _rightOption,
-              width: 320,
-              height: 220,
+            // Balance scale
+            Container(
+              alignment: Alignment.center,
+              margin: EdgeInsets.symmetric(vertical: 24),
+              child: BalanceScale(
+                leftOption: _leftOption,
+                rightOption: _rightOption,
+                width: 320,
+                height: 220,
+              ),
             ),
-          ),
 
-          // Add weight form
-          AddWeightForm(onAddWeight: _addWeight),
+            // Add weight form
+            AddWeightForm(onAddWeight: _addWeight),
 
-          // Weight lists
-          Expanded(
-            child: SingleChildScrollView(
+            // Weight lists
+            Container(
               padding: EdgeInsets.symmetric(vertical: 8),
               child: WeightList(
                 leftOption: _leftOption,
@@ -126,8 +127,8 @@ class _DecisionBalanceState extends State<DecisionBalance> {
                 onRemoveWeight: _removeWeight,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
