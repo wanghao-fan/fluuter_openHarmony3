@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'widgets/shared_element_animation.dart';
+import 'template_library/template_home.dart';
 
 void main() {
   runApp(const MyApp());
@@ -72,8 +72,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: const SharedElementAnimationContainer(),
-    );
+    return TemplateHome();
   }
 }
