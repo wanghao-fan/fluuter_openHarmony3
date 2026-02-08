@@ -1,72 +1,76 @@
 import 'package:flutter/material.dart';
-import 'components/animated_padding.dart';
 
-void main() {
-  runApp(const MyApp());
+class AnimatedPaddingWidget extends StatefulWidget {
+  final Widget child;
+  final EdgeInsetsGeometry initialPadding;
+  final EdgeInsetsGeometry targetPadding;
+  final Duration duration;
+  final Curve curve;
+  final Function()? onTap;
+
+  const AnimatedPaddingWidget({
+    Key? key,
+    required this.child,
+    this.initialPadding = EdgeInsets.zero,
+    this.targetPadding = const EdgeInsets.all(20),
+    this.duration = const Duration(milliseconds: 500),
+    this.curve = Curves.easeInOut,
+    this.onTap,
+  }) : super(key: key);
+
+  @override
+  State<AnimatedPaddingWidget> createState() => _AnimatedPaddingWidgetState();
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class _AnimatedPaddingWidgetState extends State<AnimatedPaddingWidget> {
+  late EdgeInsetsGeometry _currentPadding;
+  bool _isExpanded = false;
 
-  // This widget is the root of your application.
+  @override
+  void initState() {
+    super.initState();
+    _currentPadding = widget.initialPadding;
+  }
+
+  void _togglePadding() {
+    setState(() {
+      _isExpanded = !_isExpanded;
+      _currentPadding = _isExpanded ? widget.targetPadding : widget.initialPadding;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter for openHarmony',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return GestureDetector(
+      onTap: () {
+        _togglePadding();
+        if (widget.onTap != null) {
+          widget.onTap!();
+        }
+      },
+      child: AnimatedPadding(
+        padding: _currentPadding,
+        duration: widget.duration,
+        curve: widget.curve,
+        child: widget.child,
       ),
-      debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: 'Flutter for openHarmony'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class AnimatedPaddingExample extends StatefulWidget {
+  const AnimatedPaddingExample({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<AnimatedPaddingExample> createState() => _AnimatedPaddingExampleState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _AnimatedPaddingExampleState extends State<AnimatedPaddingExample> {
+  int _clickCount = 0;
 
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _clickCount++;
     });
   }
 
@@ -74,14 +78,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter for OpenHarmony 实战'),
+        title: Text('内边距动画示例'),
         centerTitle: true,
         backgroundColor: Colors.blue,
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
             Text(
               '内边距动画示例',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -138,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
             // 点击计数显示
             Text(
-              '点击计数: $_counter',
+              '点击计数: $_clickCount',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),
