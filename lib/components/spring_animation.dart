@@ -1,53 +1,115 @@
 import 'package:flutter/material.dart';
-import 'components/spring_animation.dart';
+import 'package:flutter/physics.dart';
 
-void main() {
-  runApp(const MyApp());
+class SpringAnimation extends StatefulWidget {
+  final Widget child;
+  final double initialScale;
+  final double targetScale;
+  final double stiffness;
+  final double damping;
+  final double mass;
+  final Function()? onTap;
+
+  const SpringAnimation({
+    Key? key,
+    required this.child,
+    this.initialScale = 1.0,
+    this.targetScale = 1.2,
+    this.stiffness = 100.0,
+    this.damping = 10.0,
+    this.mass = 1.0,
+    this.onTap,
+  }) : super(key: key);
+
+  @override
+  State<SpringAnimation> createState() => _SpringAnimationState();
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class _SpringAnimationState extends State<SpringAnimation> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+  bool _isAnimating = false;
 
-  // This widget is the root of your application.
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 300),
+      vsync: this,
+    );
+    
+    // 初始化动画对象
+    _animation = _controller.drive(
+      Tween<double>(
+        begin: widget.initialScale,
+        end: widget.targetScale,
+      ),
+    );
+    
+    // 添加动画监听器以便调试
+    _controller.addListener(() {
+      print('Animation value: ${_animation.value}');
+    });
+  }
+
+  void _startAnimation() {
+    if (_isAnimating) return;
+    
+    _isAnimating = true;
+    print('Starting animation...');
+    
+    // 重置控制器状态
+    _controller.reset();
+    
+    // 使用简单的曲线动画，确保基本功能正常
+    _controller.animateTo(1.0, curve: Curves.elasticOut).whenComplete(() {
+      print('Animation completed');
+      // 动画完成后返回初始状态
+      _controller.reverse().whenComplete(() {
+        _controller.reset();
+        _isAnimating = false;
+        setState(() {});
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter for openHarmony',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return GestureDetector(
+      onTap: () {
+        _startAnimation();
+        if (widget.onTap != null) {
+          widget.onTap!();
+        }
+      },
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _animation.value,
+            child: child,
+          );
+        },
+        child: widget.child,
       ),
-      debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: 'Flutter for openHarmony'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class SpringAnimationExample extends StatefulWidget {
+  const SpringAnimationExample({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<SpringAnimationExample> createState() => _SpringAnimationExampleState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _SpringAnimationExampleState extends State<SpringAnimationExample> {
   int _clickCount = 0;
 
   void _incrementCounter() {
@@ -60,14 +122,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('弹簧动画示例'),
         centerTitle: true,
         backgroundColor: Colors.blue,
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
             Text(
               '弹簧动画示例',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
