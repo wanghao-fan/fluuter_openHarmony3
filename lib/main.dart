@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'components/tree_view.dart';
+import 'components/real_time_chart.dart';
 
 void main() {
   runApp(const MyApp());
@@ -74,14 +74,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('树形结构数据展示'),
+        title: Text('实时数据流模拟与图表更新'),
         centerTitle: true,
         backgroundColor: Colors.blue,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: TreeViewExample(),
-      ),
+      body: RealTimeChart(),
     );
   }
 }
