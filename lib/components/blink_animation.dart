@@ -1,53 +1,86 @@
 import 'package:flutter/material.dart';
-import 'components/blink_animation.dart';
 
-void main() {
-  runApp(const MyApp());
+class BlinkAnimation extends StatefulWidget {
+  final Widget child;
+  final Duration duration;
+  final bool isBlinking;
+  final Function()? onTap;
+
+  const BlinkAnimation({
+    Key? key,
+    required this.child,
+    this.duration = const Duration(milliseconds: 1000),
+    this.isBlinking = true,
+    this.onTap,
+  }) : super(key: key);
+
+  @override
+  State<BlinkAnimation> createState() => _BlinkAnimationState();
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class _BlinkAnimationState extends State<BlinkAnimation> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
 
-  // This widget is the root of your application.
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: widget.duration,
+      vsync: this,
+    );
+    _animation = Tween<double>(begin: 1.0, end: 0.3).animate(_controller);
+    _startAnimation();
+  }
+
+  void _startAnimation() {
+    if (widget.isBlinking) {
+      _controller.repeat(reverse: true);
+    }
+  }
+
+  void _stopAnimation() {
+    _controller.stop();
+  }
+
+  @override
+  void didUpdateWidget(covariant BlinkAnimation oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isBlinking != oldWidget.isBlinking) {
+      if (widget.isBlinking) {
+        _startAnimation();
+      } else {
+        _stopAnimation();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter for openHarmony',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: FadeTransition(
+        opacity: _animation,
+        child: widget.child,
       ),
-      debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: 'Flutter for openHarmony'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class BlinkAnimationExample extends StatefulWidget {
+  const BlinkAnimationExample({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<BlinkAnimationExample> createState() => _BlinkAnimationExampleState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _BlinkAnimationExampleState extends State<BlinkAnimationExample> {
   List<bool> _isBlinkingList = [true, true, true, true];
 
   void _toggleBlink(int index) {
@@ -60,17 +93,17 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('闪烁动画示例'),
         centerTitle: true,
         backgroundColor: Colors.blue,
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
             Text(
-              '闪烁动画示例',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              '点击以下元素切换闪烁状态',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 40),
             
