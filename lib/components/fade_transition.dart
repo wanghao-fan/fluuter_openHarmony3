@@ -1,75 +1,131 @@
 import 'package:flutter/material.dart';
-import 'components/fade_transition.dart';
 
-void main() {
-  runApp(const MyApp());
+class FadeTransitionWidget extends StatefulWidget {
+  final Widget child;
+  final Duration duration;
+  final Curve curve;
+  final Function()? onTap;
+
+  const FadeTransitionWidget({
+    Key? key,
+    required this.child,
+    this.duration = const Duration(milliseconds: 300),
+    this.curve = Curves.easeInOut,
+    this.onTap,
+  }) : super(key: key);
+
+  @override
+  State<FadeTransitionWidget> createState() => _FadeTransitionWidgetState();
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class _FadeTransitionWidgetState extends State<FadeTransitionWidget> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+  bool _isVisible = true;
 
-  // This widget is the root of your application.
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: widget.duration,
+      vsync: this,
+    )..value = 1.0; // 初始状态为完全不透明
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: widget.curve,
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _toggleOpacity() {
+    setState(() {
+      _isVisible = !_isVisible;
+      if (_isVisible) {
+        _controller.forward();
+      } else {
+        _controller.reverse();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter for openHarmony',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return GestureDetector(
+      onTap: () {
+        _toggleOpacity();
+        if (widget.onTap != null) {
+          widget.onTap!();
+        }
+      },
+      child: FadeTransition(
+        opacity: _animation,
+        child: widget.child,
       ),
-      debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: 'Flutter for openHarmony'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class AnimatedOpacityWidget extends StatefulWidget {
+  final Widget child;
+  final Duration duration;
+  final Curve curve;
+  final Function()? onTap;
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  const AnimatedOpacityWidget({
+    Key? key,
+    required this.child,
+    this.duration = const Duration(milliseconds: 300),
+    this.curve = Curves.easeInOut,
+    this.onTap,
+  }) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<AnimatedOpacityWidget> createState() => _AnimatedOpacityWidgetState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _AnimatedOpacityWidgetState extends State<AnimatedOpacityWidget> {
+  double _opacity = 1.0; // 初始状态为完全不透明
+  bool _isVisible = true;
 
-  void _incrementCounter() {
+  void _toggleOpacity() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _isVisible = !_isVisible;
+      _opacity = _isVisible ? 1.0 : 0.0;
     });
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        _toggleOpacity();
+        if (widget.onTap != null) {
+          widget.onTap!();
+        }
+      },
+      child: AnimatedOpacity(
+        opacity: _opacity,
+        duration: widget.duration,
+        curve: widget.curve,
+        child: widget.child,
+      ),
+    );
+  }
+}
+
+class FadeTransitionExample extends StatefulWidget {
+  const FadeTransitionExample({Key? key}) : super(key: key);
+
+  @override
+  State<FadeTransitionExample> createState() => _FadeTransitionExampleState();
+}
+
+class _FadeTransitionExampleState extends State<FadeTransitionExample> {
   int _fadeTransitionCount = 0;
   int _animatedOpacityCount = 0;
 
@@ -89,14 +145,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter for OpenHarmony 实战'),
+        title: Text('透明度过渡动画示例'),
         centerTitle: true,
         backgroundColor: Colors.blue,
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
+          children: [
             Text(
               '透明度过渡动画示例',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
