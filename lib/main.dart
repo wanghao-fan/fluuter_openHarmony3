@@ -93,9 +93,10 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
         backgroundColor: Colors.blue,
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
               '透明度过渡动画示例',
@@ -127,7 +128,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Center(
                       child: Text(
                         '点击我',
-                        style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -163,7 +167,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Center(
                       child: Text(
                         '点击我',
-                        style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -196,7 +203,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10),
-                  Text('1. FadeTransition: 需要手动管理 AnimationController，更灵活，可控制动画生命周期'),
+                  Text(
+                      '1. FadeTransition: 需要手动管理 AnimationController，更灵活，可控制动画生命周期'),
                   Text('2. AnimatedOpacity: 内部管理动画，使用更简单，适合基本的透明度变化'),
                   Text('3. FadeTransition: 可与其他动画组合使用，适合复杂动画场景'),
                   Text('4. AnimatedOpacity: 代码更简洁，适合简单的透明度切换'),
