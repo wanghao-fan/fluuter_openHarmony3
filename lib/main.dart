@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'components/spring_animation.dart';
+import 'components/weather_animation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -48,11 +48,21 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _clickCount = 0;
+  WeatherType _currentWeather = WeatherType.sunny;
 
-  void _incrementCounter() {
+  void _toggleWeather() {
     setState(() {
-      _clickCount++;
+      switch (_currentWeather) {
+        case WeatherType.sunny:
+          _currentWeather = WeatherType.rainy;
+          break;
+        case WeatherType.rainy:
+          _currentWeather = WeatherType.snowy;
+          break;
+        case WeatherType.snowy:
+          _currentWeather = WeatherType.sunny;
+          break;
+      }
     });
   }
 
@@ -69,95 +79,45 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              '弹簧动画示例',
+              '天气动画示例',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 40),
-            
-            // 弹簧按钮
-            SpringAnimation(
-              child: ElevatedButton(
-                onPressed: _incrementCounter,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
-                  textStyle: TextStyle(fontSize: 20),
-                ),
-                child: Text('点击我'),
-              ),
-              targetScale: 1.1,
-              stiffness: 150.0,
-              damping: 12.0,
-              onTap: _incrementCounter,
+
+            // 天气动画
+            WeatherAnimation(
+              weatherType: _currentWeather,
+              size: 300,
+              onTap: _toggleWeather,
             ),
             SizedBox(height: 30),
-            
-            // 弹簧卡片
-            SpringAnimation(
-              child: Container(
-                width: 200,
-                height: 150,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: Text(
-                    '点击计数: $_clickCount',
-                    style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              targetScale: 1.05,
-              stiffness: 100.0,
-              damping: 8.0,
-            ),
-            SizedBox(height: 30),
-            
-            // 弹簧图标
-            SpringAnimation(
-              child: Container(
-                padding: EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.yellow,
-                  borderRadius: BorderRadius.circular(60),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      spreadRadius: 2,
-                      blurRadius: 4,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Icon(
-                  Icons.favorite,
-                  size: 48,
-                  color: Colors.red,
-                ),
-              ),
-              targetScale: 1.15,
-              stiffness: 200.0,
-              damping: 15.0,
-            ),
-            SizedBox(height: 40),
-            
+
+            // 天气信息
             Text(
-              '提示：点击元素可以触发弹簧动画效果',
+              _getWeatherText(_currentWeather),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 20),
+
+            // 提示信息
+            Text(
+              '点击动画区域切换天气',
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
         ),
       ),
     );
+  }
+
+  String _getWeatherText(WeatherType weatherType) {
+    switch (weatherType) {
+      case WeatherType.sunny:
+        return '晴天';
+      case WeatherType.rainy:
+        return '雨天';
+      case WeatherType.snowy:
+        return '雪天';
+    }
   }
 }
