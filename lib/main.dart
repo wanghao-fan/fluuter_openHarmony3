@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'components/tree_view.dart';
+import 'components/string_validator_component.dart';
 
 void main() {
   runApp(const MyApp());
@@ -74,13 +74,33 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('树形结构数据展示'),
-        centerTitle: true,
-        backgroundColor: Colors.blue,
+        title: Text(widget.title),
+        backgroundColor: Colors.deepPurple,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: TreeViewExample(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            const Text(
+              'Flutter三方库 string_validator 适配 OpenHarmony',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple,
+              ),
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              '实现复杂验证',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 20),
+            const StringValidatorComponent(),
+          ],
+        ),
       ),
     );
   }
